@@ -31,6 +31,18 @@ Reference: "A Hybrid Mathematical Framework for Morphogenesis and Regeneration
 Authors: [to be filled]
 """
 
+# === PAPER FONT STYLE (auto-added for JMB revision) ===
+import matplotlib as _mpl
+_mpl.use('Agg')
+import matplotlib.pyplot as _plt_style
+_plt_style.rcParams.update({
+    'font.size': 15, 'axes.titlesize': 16, 'axes.labelsize': 16,
+    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 12,
+    'figure.titlesize': 18, 'lines.linewidth': 2.0, 'axes.linewidth': 1.1,
+    'savefig.dpi': 200, 'savefig.bbox': 'tight',
+})
+# === END PAPER FONT STYLE ===
+
 import os
 import numpy as np
 import matplotlib
@@ -698,7 +710,7 @@ def plot_spacetime_1d(history: Dict, title: str = "",
     """Space–time heatmaps for all state variables (1D model)."""
     times = history['times']
     fig, axes = plt.subplots(3, 3, figsize=(17, 11))
-    fig.suptitle(title, fontsize=12, fontweight='bold')
+    fig.suptitle(title, fontsize=20, fontweight='bold')
 
     for ax, (key, label, cmap, vmin, vmax) in zip(axes.flat, _VAR_INFO):
         data = history[key].T        # (N_cells, n_times)
@@ -707,9 +719,9 @@ def plot_spacetime_1d(history: Dict, title: str = "",
         im   = ax.imshow(data, aspect='auto', origin='lower',
                          extent=[times[0], times[-1], 0, data.shape[0]],
                          cmap=cmap, vmin=vm, vmax=vM)
-        ax.set_title(label, fontsize=9)
-        ax.set_xlabel('Time', fontsize=8)
-        ax.set_ylabel('Cell', fontsize=8)
+        ax.set_title(label, fontsize=15)
+        ax.set_xlabel('Time', fontsize=14)
+        ax.set_ylabel('Cell', fontsize=14)
         plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
 
     plt.tight_layout()
@@ -724,7 +736,7 @@ def plot_snapshot_2d(history: Dict, time_idx: int = -1,
     """2D spatial snapshot at a given recorded time index."""
     t_val = history['times'][time_idx]
     fig, axes = plt.subplots(3, 3, figsize=(16, 11))
-    fig.suptitle(f"{title}   (t = {t_val:.1f})", fontsize=12, fontweight='bold')
+    fig.suptitle(f"{title}   (t = {t_val:.1f})", fontsize=20, fontweight='bold')
 
     for ax, (key, label, cmap, vmin, vmax) in zip(axes.flat, _VAR_INFO):
         data = history[key][time_idx].reshape(N, N)
@@ -732,7 +744,7 @@ def plot_snapshot_2d(history: Dict, time_idx: int = -1,
         vM   = data.max() if vmax is None else vmax
         im   = ax.imshow(data, cmap=cmap, vmin=vm, vmax=vM, origin='lower',
                          interpolation='nearest')
-        ax.set_title(label, fontsize=9)
+        ax.set_title(label, fontsize=15)
         ax.axis('off')
         plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
 
@@ -751,10 +763,10 @@ def plot_voltage_timeseries(history: Dict, cell_indices: List[int],
         ax.plot(history['times'], history['V'][:, idx],
                 label=f'Cell {idx}', linewidth=1.5)
     ax.axhline(0, color='k', lw=0.5, ls='--', alpha=0.4)
-    ax.set_xlabel('Time', fontsize=11)
-    ax.set_ylabel(r'$V_i(t)$', fontsize=11)
-    ax.set_title(title, fontsize=11)
-    ax.legend(fontsize=8, ncol=min(4, len(cell_indices)))
+    ax.set_xlabel('Time', fontsize=19)
+    ax.set_ylabel(r'$V_i(t)$', fontsize=19)
+    ax.set_title(title, fontsize=19)
+    ax.legend(fontsize=14, ncol=min(4, len(cell_indices)))
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
     if save_path:
@@ -768,11 +780,11 @@ def plot_regen_score(histories: Dict[str, Dict], title: str = "",
     fig, ax = plt.subplots(figsize=(9, 4))
     for label, hist in histories.items():
         ax.plot(hist['times'], hist['regen_score'], label=label, lw=2)
-    ax.set_xlabel('Time', fontsize=11)
-    ax.set_ylabel('Regeneration score', fontsize=11)
-    ax.set_title(title, fontsize=11)
+    ax.set_xlabel('Time', fontsize=19)
+    ax.set_ylabel('Regeneration score', fontsize=19)
+    ax.set_title(title, fontsize=19)
     ax.set_ylim(0, 1.05)
-    ax.legend(fontsize=9)
+    ax.legend(fontsize=15)
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
     if save_path:
@@ -950,12 +962,12 @@ def experiment_transient_forcing(
                                   ['Pre-forcing', 'Post-forcing (relaxed)']):
             ax.plot(hist['V'][-1], color='steelblue', lw=1.5)
             ax.axhline(0, color='k', lw=0.5, ls='--', alpha=0.4)
-            ax.set_title(lbl, fontsize=10)
+            ax.set_title(lbl, fontsize=17)
             ax.set_xlabel('Cell index')
             ax.set_ylabel(r'$V_i$')
             ax.set_ylim(params.V_minus - 0.3, params.V_plus + 0.3)
         fig.suptitle("Exp 3: Voltage profile before and after transient forcing",
-                     fontsize=11, fontweight='bold')
+                     fontsize=19, fontweight='bold')
         plt.tight_layout()
         plt.savefig(f"{save_dir}/{tag}_compare.png", dpi=150, bbox_inches='tight')
     else:
@@ -1017,9 +1029,9 @@ def experiment_gap_junction_sweep(
     # Summary plot: regen score vs G
     fig, axes = plt.subplots(1, 2, figsize=(13, 4))
     axes[0].plot(G_values, final_scores, 'o-', color='steelblue', lw=2, ms=7)
-    axes[0].set_xlabel(r'$G_{\mathrm{init}}$', fontsize=12)
-    axes[0].set_ylabel('Final regeneration score', fontsize=11)
-    axes[0].set_title('Regenerative threshold vs. coupling', fontsize=11)
+    axes[0].set_xlabel(r'$G_{\mathrm{init}}$', fontsize=20)
+    axes[0].set_ylabel('Final regeneration score', fontsize=19)
+    axes[0].set_title('Regenerative threshold vs. coupling', fontsize=19)
     axes[0].grid(True, alpha=0.3)
 
     # Space-time V for extreme cases
@@ -1031,11 +1043,11 @@ def experiment_gap_junction_sweep(
             im   = ax.imshow(data, aspect='auto', origin='lower',
                              extent=[0, T_regen, 0, params.N],
                              cmap='RdBu_r')
-            ax.set_title(f'$V_i(t)$ at $G_{{init}}={G_val}$', fontsize=10)
+            ax.set_title(f'$V_i(t)$ at $G_{{init}}={G_val}$', fontsize=17)
             ax.set_xlabel('Time'); ax.set_ylabel('Cell')
             plt.colorbar(im, ax=ax, fraction=0.03)
 
-    plt.suptitle("Experiment 4: Gap-junction modulation", fontsize=11,
+    plt.suptitle("Experiment 4: Gap-junction modulation", fontsize=19,
                  fontweight='bold')
     plt.tight_layout()
     plt.savefig(f"{save_dir}/exp4_gap_sweep_{dim}d.png",

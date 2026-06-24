@@ -21,6 +21,18 @@ directly evidenced results:
        dynamic coupling (Problem 5).
 """
 
+# === PAPER FONT STYLE (auto-added for JMB revision) ===
+import matplotlib as _mpl
+_mpl.use('Agg')
+import matplotlib.pyplot as _plt_style
+_plt_style.rcParams.update({
+    'font.size': 15, 'axes.titlesize': 16, 'axes.labelsize': 16,
+    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 12,
+    'figure.titlesize': 18, 'lines.linewidth': 2.0, 'axes.linewidth': 1.1,
+    'savefig.dpi': 200, 'savefig.bbox': 'tight',
+})
+# === END PAPER FONT STYLE ===
+
 import os
 import numpy as np
 import matplotlib
@@ -94,7 +106,7 @@ def experiment_nucleation_threshold(
         T: float = 70.0,
         delta_vals: Optional[np.ndarray] = None,
         n_seeds: int = 20,
-        save_path: str = "figures/C1_nucleation.png") -> dict:
+        save_path: str = "fig2_nucleation.png") -> dict:
     """
     Sweep initial noise amplitude delta.  All cells start at V_- + delta*xi,
     xi ~ N(0,1).  Record:
@@ -160,20 +172,19 @@ def experiment_nucleation_threshold(
               f"t_domain={t_domain[i]:.1f}")
 
     # ---- Figure ----
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+    fig, axes = plt.subplots(1, 3, figsize=(16.5, 5.4))
     fig.suptitle(
-        "C1 — Nucleation threshold\n"
-        r"Pattern formation probability vs initial noise amplitude $\delta$",
-        fontsize=11, fontweight='bold')
+        r"Experiment 1 — nucleation probability vs noise amplitude $\delta$",
+        fontsize=16, fontweight='bold', y=1.02)
 
     # Panel 0: nucleation probability
     axes[0].plot(delta_vals, p_pattern, 'ko-', lw=2, ms=6)
     axes[0].axhline(0.5, color='gray', lw=1, ls='--', alpha=0.7)
     # Shade the barrier region
     axes[0].fill_between(delta_vals, 0, p_pattern, alpha=0.15, color='steelblue')
-    axes[0].set_xlabel(r'Noise amplitude $\delta$', fontsize=11)
-    axes[0].set_ylabel('P(pattern formation)', fontsize=11)
-    axes[0].set_title('Nucleation probability', fontsize=10)
+    axes[0].set_xlabel(r'Noise amplitude $\delta$', fontsize=16)
+    axes[0].set_ylabel('P(pattern formation)', fontsize=16)
+    axes[0].set_title('Nucleation probability', fontsize=15)
     axes[0].set_ylim(-0.05, 1.05); axes[0].grid(True, alpha=0.3)
 
     # Estimate threshold
@@ -182,15 +193,15 @@ def experiment_nucleation_threshold(
         delta_star = delta_vals[cross[0]]
         axes[0].axvline(delta_star, color='firebrick', lw=2, ls='--',
                         label=fr'$\delta^* \approx {delta_star:.2f}$')
-        axes[0].legend(fontsize=9)
+        axes[0].legend(fontsize=15)
 
     # Panel 1: fraction of cells at V_+
     mask = frac_plus > 0
     axes[1].plot(delta_vals[mask], frac_plus[mask], 's-',
                  color='firebrick', lw=2, ms=6)
-    axes[1].set_xlabel(r'$\delta$', fontsize=11)
-    axes[1].set_ylabel(r'Mean $\langle V_i > V^*\rangle$ (successful runs)', fontsize=10)
-    axes[1].set_title(r'Domain size (fraction at $V_+$)', fontsize=10)
+    axes[1].set_xlabel(r'$\delta$', fontsize=16)
+    axes[1].set_ylabel(r'Fraction of cells at $V_+$', fontsize=15)
+    axes[1].set_title(r'Domain size (successful runs)', fontsize=15)
     axes[1].grid(True, alpha=0.3)
 
     # Panel 2: time to domain formation
@@ -198,15 +209,15 @@ def experiment_nucleation_threshold(
     if mask2.sum() > 1:
         axes[2].plot(delta_vals[mask2], t_domain[mask2], 'd-',
                      color='darkorange', lw=2, ms=6)
-        axes[2].set_xlabel(r'$\delta$', fontsize=11)
-        axes[2].set_ylabel('Mean time to pattern (successful runs)', fontsize=10)
-        axes[2].set_title('Domain formation time', fontsize=10)
+        axes[2].set_xlabel(r'$\delta$', fontsize=16)
+        axes[2].set_ylabel('Time to pattern formation', fontsize=15)
+        axes[2].set_title('Domain formation time (successful runs)', fontsize=15)
         axes[2].grid(True, alpha=0.3)
     else:
         axes[2].text(0.5, 0.5, 'Insufficient data\n(increase T or delta)',
                      ha='center', va='center', transform=axes[2].transAxes)
 
-    plt.tight_layout()
+    fig.tight_layout(rect=[0, 0, 1, 0.93])
     plt.savefig(save_path, dpi=150, bbox_inches='tight')
     plt.close()
     print(f"  Saved: {save_path}")
@@ -319,31 +330,31 @@ def _plot_regen_single(res: dict, save_path: str) -> None:
     fig, axes = plt.subplots(1, 3, figsize=(15, 4))
     fig.suptitle(
         f"C2 — Regeneration vs lesion size\n{res['label']}",
-        fontsize=11, fontweight='bold')
+        fontsize=19, fontweight='bold')
 
     lf = res['lesion_fracs']
 
     axes[0].plot(lf, res['p_success'], 'ko-', lw=2, ms=6)
     axes[0].axhline(0.5, color='gray', lw=1, ls='--', alpha=0.6)
     axes[0].fill_between(lf, 0, res['p_success'], alpha=0.15, color='steelblue')
-    axes[0].set_xlabel(r'Lesion fraction $|\mathcal{D}|/N$', fontsize=11)
-    axes[0].set_ylabel('P(regeneration success)', fontsize=11)
-    axes[0].set_title('Regeneration probability', fontsize=10)
+    axes[0].set_xlabel(r'Lesion fraction $|\mathcal{D}|/N$', fontsize=19)
+    axes[0].set_ylabel('P(regeneration success)', fontsize=19)
+    axes[0].set_title('Regeneration probability', fontsize=17)
     axes[0].set_ylim(-0.05, 1.05); axes[0].grid(True, alpha=0.3)
 
     mask = ~np.isnan(res['mean_time'])
     if mask.sum() > 1:
         axes[1].plot(lf[mask], res['mean_time'][mask], 's-',
                      color='darkorange', lw=2, ms=6)
-    axes[1].set_xlabel(r'Lesion fraction', fontsize=11)
-    axes[1].set_ylabel('Mean regeneration time', fontsize=11)
-    axes[1].set_title('Time to regeneration', fontsize=10)
+    axes[1].set_xlabel(r'Lesion fraction', fontsize=19)
+    axes[1].set_ylabel('Mean regeneration time', fontsize=19)
+    axes[1].set_title('Time to regeneration', fontsize=17)
     axes[1].grid(True, alpha=0.3)
 
     axes[2].plot(lf, res['mean_fid'], 'd-', color='firebrick', lw=2, ms=6)
-    axes[2].set_xlabel(r'Lesion fraction', fontsize=11)
-    axes[2].set_ylabel('Mean pattern fidelity', fontsize=11)
-    axes[2].set_title('Pattern fidelity (recovered / original)', fontsize=10)
+    axes[2].set_xlabel(r'Lesion fraction', fontsize=19)
+    axes[2].set_ylabel('Mean pattern fidelity', fontsize=19)
+    axes[2].set_title('Pattern fidelity (recovered / original)', fontsize=17)
     axes[2].set_ylim(-0.05, 1.05); axes[2].grid(True, alpha=0.3)
 
     plt.tight_layout()
@@ -358,7 +369,7 @@ def plot_comparison(res_list: list, title: str, save_path: str) -> None:
     styles = ['-o', '--s', '-.d', ':^']
 
     fig, axes = plt.subplots(1, 3, figsize=(15, 4))
-    fig.suptitle(title, fontsize=11, fontweight='bold')
+    fig.suptitle(title, fontsize=19, fontweight='bold')
 
     for res, c, st in zip(res_list, colors, styles):
         lf = res['lesion_fracs']
@@ -375,10 +386,10 @@ def plot_comparison(res_list: list, title: str, save_path: str) -> None:
             ['P(regeneration success)', 'Mean regen time', 'Pattern fidelity'],
             ['Regeneration probability', 'Time to regeneration',
              'Pattern fidelity']):
-        ax.set_xlabel(r'Lesion fraction $|\mathcal{D}|/N$', fontsize=11)
-        ax.set_ylabel(ylabel, fontsize=10)
-        ax.set_title(title_ax, fontsize=10)
-        ax.legend(fontsize=8); ax.grid(True, alpha=0.3)
+        ax.set_xlabel(r'Lesion fraction $|\mathcal{D}|/N$', fontsize=19)
+        ax.set_ylabel(ylabel, fontsize=17)
+        ax.set_title(title_ax, fontsize=17)
+        ax.legend(fontsize=14); ax.grid(True, alpha=0.3)
 
     axes[0].axhline(0.5, color='gray', lw=1, ls='--', alpha=0.5)
     axes[0].set_ylim(-0.05, 1.05)
