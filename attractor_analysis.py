@@ -30,6 +30,18 @@ Contents
    - Effective energy landscape reshapes as G_ij adapts
 """
 
+# === PAPER FONT STYLE (auto-added for JMB revision) ===
+import matplotlib as _mpl
+_mpl.use('Agg')
+import matplotlib.pyplot as _plt_style
+_plt_style.rcParams.update({
+    'font.size': 15, 'axes.titlesize': 16, 'axes.labelsize': 16,
+    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 12,
+    'figure.titlesize': 18, 'lines.linewidth': 2.0, 'axes.linewidth': 1.1,
+    'savefig.dpi': 200, 'savefig.bbox': 'tight',
+})
+# === END PAPER FONT STYLE ===
+
 import os
 import numpy as np
 import matplotlib
@@ -104,7 +116,7 @@ def lyapunov_rate(V: np.ndarray, V_dot: np.ndarray,
 def experiment_lyapunov_verification(
         N: int = 30, T: float = 60.0,
         tau_eps_vals: Optional[List[float]] = None,
-        save_path: str = "figures/B1_lyapunov.png"):
+        save_path: str = "fig5_lyapunov.png"):
     """
     Numerical verification of the Lyapunov theorem.
 
@@ -171,9 +183,7 @@ def experiment_lyapunov_verification(
 
     # --- Plot ---
     fig, axes = plt.subplots(2, 3, figsize=(16, 9))
-    fig.suptitle("Lyapunov function analysis\n"
-                 r"$E(V) = \sum_i U(V_i) + \frac{1}{2}\sum_{ij} G_{ij}(V_i-V_j)^2$",
-                 fontsize=12, fontweight='bold')
+    fig.suptitle("Lyapunov function analysis", fontsize=18, fontweight='bold')
 
     colors = {'Pure bioelectric': 'steelblue', 'Full model': 'firebrick'}
 
@@ -191,21 +201,21 @@ def experiment_lyapunov_verification(
                         color=c, lw=2, label=label)
 
     axes[0, 0].axhline(0, color='k', lw=0.8, ls='--')
-    axes[0, 0].set_xlabel('Time', fontsize=10); axes[0, 0].set_ylabel(r'$E(t) - E(0)$', fontsize=10)
-    axes[0, 0].set_title('Lyapunov function $E(t)$', fontsize=10)
-    axes[0, 0].legend(fontsize=8)
+    axes[0, 0].set_xlabel('Time', fontsize=17); axes[0, 0].set_ylabel(r'$E(t) - E(0)$', fontsize=17)
+    axes[0, 0].set_title('Lyapunov function $E(t)$', fontsize=17)
+    axes[0, 0].legend(fontsize=14)
 
     axes[0, 1].axhline(0, color='k', lw=0.8, ls='--')
-    axes[0, 1].set_xlabel('Time', fontsize=10); axes[0, 1].set_ylabel(r'$dE/dt$', fontsize=10)
-    axes[0, 1].set_title(r'Rate decomposition: $-C\|\dot V\|^2$ vs $\Lambda$', fontsize=10)
-    axes[0, 1].legend(fontsize=7)
+    axes[0, 1].set_xlabel('Time', fontsize=17); axes[0, 1].set_ylabel(r'$dE/dt$', fontsize=17)
+    axes[0, 1].set_title(r'Rate decomposition: $-C\|\dot V\|^2$ vs $\Lambda$', fontsize=17)
+    axes[0, 1].legend(fontsize=11, loc='lower right', framealpha=0.9)
 
     axes[0, 2].axhline(1, color='k', lw=0.8, ls='--', alpha=0.5,
                        label='$|\\Lambda|/C\\|\\dot V\\|^2 = 1$')
-    axes[0, 2].set_xlabel('Time', fontsize=10)
-    axes[0, 2].set_ylabel(r'$|\Lambda| \,/\, C\|\dot V\|^2$', fontsize=10)
-    axes[0, 2].set_title('GRN perturbation ratio', fontsize=10)
-    axes[0, 2].legend(fontsize=8)
+    axes[0, 2].set_xlabel('Time', fontsize=17)
+    axes[0, 2].set_ylabel(r'$|\Lambda| \,/\, C\|\dot V\|^2$', fontsize=17)
+    axes[0, 2].set_title('GRN perturbation ratio', fontsize=17)
+    axes[0, 2].legend(fontsize=14)
     axes[0, 2].set_ylim(0, 3)
 
     # Row 1: Phase portrait + energy landscape
@@ -220,9 +230,9 @@ def experiment_lyapunov_verification(
                        label=fr'$V_0 = {p_pure.V_0}$')
     axes[1, 0].axvline(p_pure.V_plus,  color='firebrick', lw=1.5, ls='--',
                        label=fr'$V_+ = {p_pure.V_plus}$')
-    axes[1, 0].set_xlabel(r'$V$', fontsize=11); axes[1, 0].set_ylabel(r'$U(V)$', fontsize=11)
-    axes[1, 0].set_title('Single-cell double-well potential', fontsize=10)
-    axes[1, 0].legend(fontsize=8)
+    axes[1, 0].set_xlabel(r'$V$', fontsize=19); axes[1, 0].set_ylabel(r'$U(V)$', fontsize=19)
+    axes[1, 0].set_title('Single-cell double-well potential', fontsize=17)
+    axes[1, 0].legend(fontsize=14)
 
     # Trajectory in V-space for one cell
     net2 = BioelectricNetwork(p_pure, seed=99)
@@ -239,9 +249,9 @@ def experiment_lyapunov_verification(
     axes[1, 1].axhline(p_pure.V_minus, color='steelblue', lw=1, ls='--', alpha=0.7)
     axes[1, 1].axhline(p_pure.V_plus,  color='firebrick', lw=1, ls='--', alpha=0.7)
     axes[1, 1].axhline(p_pure.V_0,     color='gray',      lw=1, ls='--', alpha=0.7)
-    axes[1, 1].set_xlabel('Time', fontsize=11)
-    axes[1, 1].set_ylabel(r'$V(t)$', fontsize=11)
-    axes[1, 1].set_title(r'Single cell: $V(0) \approx V_0$, G=0 → $V_+$', fontsize=10)
+    axes[1, 1].set_xlabel('Time', fontsize=19)
+    axes[1, 1].set_ylabel(r'$V(t)$', fontsize=19)
+    axes[1, 1].set_title(r'Single cell: $V(0) \approx V_0$, G=0 → $V_+$', fontsize=17)
 
     # Energy landscape with coupling: 2-cell system
     V1_grid = np.linspace(-2, 2, 60)
@@ -257,8 +267,8 @@ def experiment_lyapunov_verification(
     axes[1, 2].contour(V1g, V2g, E_2cell, levels=levels[::5], colors='white',
                        linewidths=0.5, alpha=0.5)
     plt.colorbar(ct, ax=axes[1, 2], fraction=0.046)
-    axes[1, 2].set_xlabel(r'$V_1$', fontsize=11); axes[1, 2].set_ylabel(r'$V_2$', fontsize=11)
-    axes[1, 2].set_title(fr'2-cell energy landscape ($G={G_2cell}$)', fontsize=10)
+    axes[1, 2].set_xlabel(r'$V_1$', fontsize=19); axes[1, 2].set_ylabel(r'$V_2$', fontsize=19)
+    axes[1, 2].set_title(fr'2-cell energy landscape ($G={G_2cell}$)', fontsize=17)
     # Mark the 4 minima (V_+,V_+), (V_-,V_-), and saddles (V_+,V_-)
     for vv1, vv2, mk in [(p_pure.V_minus, p_pure.V_minus, '*'),
                           (p_pure.V_plus,  p_pure.V_plus,  '*'),
@@ -266,7 +276,7 @@ def experiment_lyapunov_verification(
                           (p_pure.V_minus, p_pure.V_plus,  'o')]:
         axes[1, 2].plot(vv1, vv2, mk, color='yellow', ms=10, markeredgecolor='k')
 
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0, 1, 0.95], h_pad=2.0)
     plt.savefig(save_path, dpi=150, bbox_inches='tight')
     plt.close()
     print(f"  Saved: {save_path}")
@@ -283,7 +293,7 @@ def experiment_polarity_reversal(
         amplitude: float = 3.0,
         tau_eps_with: float = 50.0,
         tau_eps_without: float = 0.3,
-        save_path: str = "figures/B2_polarity_reversal.png"):
+        save_path: str = "fig6_polarity-reversal.png"):
     """
     Planaria polarity reversal experiment.
 
@@ -375,11 +385,11 @@ def experiment_polarity_reversal(
     t_force_end   = T_eq + T_force
 
     # ---- Figure ----
-    fig, axes = plt.subplots(3, 4, figsize=(18, 12))
+    fig, axes = plt.subplots(2, 4, figsize=(18, 8.8))
     fig.suptitle("Planaria polarity reversal: attractor switching\n"
                  r"Transient forcing of amplitude $A$, "
                  r"duration $T_{\mathrm{force}}$",
-                 fontsize=12, fontweight='bold')
+                 fontsize=18, fontweight='bold', y=0.995)
 
     colors_row = ['steelblue', 'firebrick']
     labels_row = [fr'With slow memory ($\tau_\varepsilon={tau_eps_with}$)',
@@ -394,9 +404,9 @@ def experiment_polarity_reversal(
             hist_post['V'].T, aspect='auto', origin='lower',
             extent=[0, T_post, 0, N], cmap='RdBu_r',
             vmin=-2.0, vmax=2.0)
-        axes[row, 0].set_title(f'Post-forcing $V_i(t)$\n{label}', fontsize=8)
-        axes[row, 0].set_xlabel('Time', fontsize=8)
-        axes[row, 0].set_ylabel('Cell', fontsize=8)
+        axes[row, 0].set_title(f'Post-forcing $V_i(t)$\n{label}', fontsize=14)
+        axes[row, 0].set_xlabel('Time', fontsize=14)
+        axes[row, 0].set_ylabel('Cell', fontsize=14)
         plt.colorbar(im, ax=axes[row, 0], fraction=0.05)
 
         # Column 1: V profiles before / mid / after
@@ -405,19 +415,19 @@ def experiment_polarity_reversal(
         axes[row, 1].plot(x, res['V_mid'],    color=tc, lw=2, ls='--', label='End of forcing')
         axes[row, 1].plot(x, res['V_after'],  color=tc, lw=2, ls='-',  label='After relaxation')
         axes[row, 1].axhline(0, color='gray', lw=0.8, ls=':', alpha=0.5)
-        axes[row, 1].set_xlabel('Cell index', fontsize=9)
-        axes[row, 1].set_ylabel(r'$V_i$', fontsize=9)
-        axes[row, 1].set_title('V profiles', fontsize=9)
-        axes[row, 1].legend(fontsize=7)
+        axes[row, 1].set_xlabel('Cell index', fontsize=15)
+        axes[row, 1].set_ylabel(r'$V_i$', fontsize=15)
+        axes[row, 1].set_title('V profiles', fontsize=15)
+        axes[row, 1].legend(fontsize=11, loc='best', framealpha=0.9)
 
         # Column 2: epsilon profiles
         eps_hist = res['hist_post']['eps']
         axes[row, 2].imshow(
             eps_hist.T, aspect='auto', origin='lower',
             extent=[0, T_post, 0, N], cmap='Blues', vmin=0, vmax=1)
-        axes[row, 2].set_title(r'Slow memory $\varepsilon_i(t)$', fontsize=9)
-        axes[row, 2].set_xlabel('Time', fontsize=8)
-        axes[row, 2].set_ylabel('Cell', fontsize=8)
+        axes[row, 2].set_title(r'Slow memory $\varepsilon_i(t)$', fontsize=15)
+        axes[row, 2].set_xlabel('Time', fontsize=14)
+        axes[row, 2].set_ylabel('Cell', fontsize=14)
 
         # Column 3: polarity time series
         t_arr = t_with if row == 0 else t_without
@@ -426,29 +436,33 @@ def experiment_polarity_reversal(
         axes[row, 3].axhline(0, color='k', lw=0.8, ls='--', alpha=0.5)
         axes[row, 3].axvspan(t_force_start, t_force_end,
                               alpha=0.15, color='orange', label='Forcing window')
-        axes[row, 3].set_xlabel('Time', fontsize=9)
+        axes[row, 3].set_xlabel('Time', fontsize=15)
         axes[row, 3].set_ylabel(r'Polarity $\langle V_{\rm ant}\rangle - \langle V_{\rm post}\rangle$',
-                                  fontsize=8)
-        axes[row, 3].set_title('Polarity index over time', fontsize=9)
-        axes[row, 3].legend(fontsize=7)
+                                  fontsize=14)
+        axes[row, 3].set_title('Polarity index over time', fontsize=15)
+        axes[row, 3].legend(fontsize=12)
 
         print(f"    tau_eps={res['tau_eps']:.1f}: "
               f"polarity before={res['polarity_before']:+.3f}, "
               f"after={res['polarity_after']:+.3f}  "
               f"({'PERMANENT SWITCH' if res['polarity_before']*res['polarity_after'] < 0 else 'RETURNED'})")
 
-    # Bottom row: comparison + energy landscape
-    axes[2, 0].plot(t_with,    p_with,    'steelblue', lw=2,
+    # ---- Figure 2: summary panels (different plot types) ----
+    fig2, ax2 = plt.subplots(1, 4, figsize=(18, 4.6))
+    fig2.suptitle("Polarity switching: summary across memory regimes",
+                  fontsize=18, fontweight='bold')
+
+    ax2[0].plot(t_with,    p_with,    'steelblue', lw=2,
                     label=fr'$\tau_\varepsilon={tau_eps_with}$ (with memory)')
-    axes[2, 0].plot(t_without, p_without, 'firebrick', lw=2, ls='--',
+    ax2[0].plot(t_without, p_without, 'firebrick', lw=2, ls='--',
                     label=fr'$\tau_\varepsilon={tau_eps_without}$ (no memory)')
-    axes[2, 0].axhline(0, color='k', lw=0.8, ls='--', alpha=0.5)
-    axes[2, 0].axvspan(t_force_start, t_force_end, alpha=0.15,
+    ax2[0].axhline(0, color='k', lw=0.8, ls='--', alpha=0.5)
+    ax2[0].axvspan(t_force_start, t_force_end, alpha=0.15,
                         color='orange', label='Forcing')
-    axes[2, 0].set_xlabel('Time', fontsize=10)
-    axes[2, 0].set_ylabel('Polarity index', fontsize=10)
-    axes[2, 0].set_title('Memory vs no-memory: polarity', fontsize=10)
-    axes[2, 0].legend(fontsize=8)
+    ax2[0].set_xlabel('Time', fontsize=17)
+    ax2[0].set_ylabel('Polarity index', fontsize=17)
+    ax2[0].set_title('Memory vs no-memory: polarity', fontsize=17)
+    ax2[0].legend(fontsize=14)
 
     # Bar: summary of polarity change
     labels_bar = ['Before', 'After\n(memory)', 'After\n(no memory)']
@@ -456,38 +470,43 @@ def experiment_polarity_reversal(
                   res_with['polarity_after'],
                   res_without['polarity_after']]
     colors_bar = ['gray', 'steelblue', 'firebrick']
-    bars = axes[2, 1].bar(labels_bar, values_bar, color=colors_bar, alpha=0.8, edgecolor='k')
-    axes[2, 1].axhline(0, color='k', lw=1)
-    axes[2, 1].set_ylabel('Polarity index', fontsize=10)
-    axes[2, 1].set_title('Polarity before vs after forcing', fontsize=10)
+    bars = ax2[1].bar(labels_bar, values_bar, color=colors_bar, alpha=0.8, edgecolor='k')
+    ax2[1].axhline(0, color='k', lw=1)
+    ax2[1].set_ylabel('Polarity index', fontsize=17)
+    ax2[1].set_title('Polarity before vs after forcing', fontsize=17)
 
     # Switching condition illustration
     tau_range = np.logspace(-1, 2.5, 40)
     # Conceptual: switching success approximated by logistic
     switch_prob = 1.0 / (1 + np.exp(-(np.log10(tau_range) - 0.8)*3))
-    axes[2, 2].semilogx(tau_range, switch_prob, 'k-', lw=2.5)
-    axes[2, 2].axvline(tau_eps_with,    color='steelblue', lw=2, ls='--',
+    ax2[2].semilogx(tau_range, switch_prob, 'k-', lw=2.5)
+    ax2[2].axvline(tau_eps_with,    color='steelblue', lw=2, ls='--',
                         label=fr'$\tau_\varepsilon={tau_eps_with}$')
-    axes[2, 2].axvline(tau_eps_without, color='firebrick',  lw=2, ls='--',
+    ax2[2].axvline(tau_eps_without, color='firebrick',  lw=2, ls='--',
                         label=fr'$\tau_\varepsilon={tau_eps_without}$')
-    axes[2, 2].set_xlabel(r'$\tau_\varepsilon$', fontsize=12)
-    axes[2, 2].set_ylabel('Probability of permanent switch', fontsize=10)
-    axes[2, 2].set_title(r'Switching threshold in $\tau_\varepsilon$', fontsize=10)
-    axes[2, 2].legend(fontsize=8); axes[2, 2].grid(True, alpha=0.3)
+    ax2[2].set_xlabel(r'$\tau_\varepsilon$', fontsize=20)
+    ax2[2].set_ylabel('Probability of permanent switch', fontsize=17)
+    ax2[2].set_title(r'Switching threshold in $\tau_\varepsilon$', fontsize=17)
+    ax2[2].legend(fontsize=14); ax2[2].grid(True, alpha=0.3)
 
     # eps profiles: with vs without
     for res, c, lbl in [(res_with, 'steelblue', 'with'), (res_without, 'firebrick', 'without')]:
         eps_after = res['hist_post']['eps'][-1]
-        axes[2, 3].plot(np.arange(N), eps_after, color=c, lw=2, label=lbl)
-    axes[2, 3].set_xlabel('Cell index', fontsize=10)
-    axes[2, 3].set_ylabel(r'$\varepsilon_i$ (final)', fontsize=10)
-    axes[2, 3].set_title(r'Final slow-memory profile', fontsize=10)
-    axes[2, 3].legend(fontsize=9)
+        ax2[3].plot(np.arange(N), eps_after, color=c, lw=2, label=lbl)
+    ax2[3].set_xlabel('Cell index', fontsize=17)
+    ax2[3].set_ylabel(r'$\varepsilon_i$ (final)', fontsize=17)
+    ax2[3].set_title(r'Final slow-memory profile', fontsize=17)
+    ax2[3].legend(fontsize=15)
 
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=150, bbox_inches='tight')
-    plt.close()
-    print(f"  Saved: {save_path}")
+    fig.tight_layout(rect=[0, 0, 1, 0.93], h_pad=1.6)
+    fig.savefig(save_path, dpi=150, bbox_inches='tight')
+    plt.close(fig)
+
+    save_path2 = save_path.replace('fig6_polarity-reversal', 'fig7_polarity-summary')
+    fig2.tight_layout(rect=[0, 0, 1, 0.88])
+    fig2.savefig(save_path2, dpi=150, bbox_inches='tight')
+    plt.close(fig2)
+    print(f"  Saved: {save_path} and {save_path2}")
     return {'with_memory': res_with, 'without_memory': res_without}
 
 
@@ -499,7 +518,7 @@ def experiment_basin_mapping(
         N: int = 30, T_eq: float = 50.0,
         depol_fracs: Optional[np.ndarray] = None,
         n_seeds: int = 4,
-        save_path: str = "figures/B3_basin_map.png"):
+        save_path: str = "fig8_basin-map.png"):
     """
     Map the basin of attraction by varying the initial fraction of
     depolarized cells.
@@ -543,7 +562,7 @@ def experiment_basin_mapping(
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
     fig.suptitle("Basin of attraction mapping\n"
                  "Initial fraction of depolarized cells vs final state",
-                 fontsize=12, fontweight='bold')
+                 fontsize=20, fontweight='bold')
 
     axes[0].plot(depol_fracs, Vm_mean, 'steelblue', lw=2.5)
     axes[0].fill_between(depol_fracs,
@@ -554,19 +573,19 @@ def experiment_basin_mapping(
                     alpha=0.6, label=f'$V_+ = {p.V_plus}$')
     axes[0].axhline(p.V_minus, color='steelblue', lw=1, ls='--',
                     alpha=0.6, label=f'$V_- = {p.V_minus}$')
-    axes[0].set_xlabel(r'Initial depolarized fraction $f$', fontsize=11)
-    axes[0].set_ylabel(r'$\langle V_i \rangle$ final', fontsize=11)
-    axes[0].set_title(r'Mean final voltage', fontsize=10)
-    axes[0].legend(fontsize=9); axes[0].grid(True, alpha=0.3)
+    axes[0].set_xlabel(r'Initial depolarized fraction $f$', fontsize=19)
+    axes[0].set_ylabel(r'$\langle V_i \rangle$ final', fontsize=19)
+    axes[0].set_title(r'Mean final voltage', fontsize=17)
+    axes[0].legend(fontsize=15); axes[0].grid(True, alpha=0.3)
 
     axes[1].plot(depol_fracs, pol_mean, 'k', lw=2.5)
     axes[1].fill_between(depol_fracs,
                           pol_mean - pol_std, pol_mean + pol_std,
                           alpha=0.25, color='gray')
     axes[1].axhline(0, color='k', lw=0.8, ls='--')
-    axes[1].set_xlabel(r'Initial depolarized fraction $f$', fontsize=11)
-    axes[1].set_ylabel('Final polarity', fontsize=11)
-    axes[1].set_title('Polarity (anterior - posterior)', fontsize=10)
+    axes[1].set_xlabel(r'Initial depolarized fraction $f$', fontsize=19)
+    axes[1].set_ylabel('Final polarity', fontsize=19)
+    axes[1].set_title('Polarity (anterior - posterior)', fontsize=17)
     axes[1].grid(True, alpha=0.3)
 
     # Normalized: 0 = all V_-, 1 = all V_+
@@ -578,10 +597,10 @@ def experiment_basin_mapping(
     axes[2].plot(depol_fracs, sig_fit, 'k--', lw=1.5, alpha=0.5, label='Sigmoid guide')
     axes[2].axhline(0.5, color='gray', lw=0.8, ls=':', alpha=0.7)
     axes[2].axvline(0.5, color='gray', lw=0.8, ls=':', alpha=0.7)
-    axes[2].set_xlabel(r'Initial depolarized fraction $f$', fontsize=11)
-    axes[2].set_ylabel('Normalized final state', fontsize=11)
-    axes[2].set_title('Basin boundary (near $f^* \\approx 0.5$)', fontsize=10)
-    axes[2].legend(fontsize=9); axes[2].grid(True, alpha=0.3)
+    axes[2].set_xlabel(r'Initial depolarized fraction $f$', fontsize=19)
+    axes[2].set_ylabel('Normalized final state', fontsize=19)
+    axes[2].set_title('Basin boundary (near $f^* \\approx 0.5$)', fontsize=17)
+    axes[2].legend(fontsize=15); axes[2].grid(True, alpha=0.3)
 
     plt.tight_layout()
     plt.savefig(save_path, dpi=150, bbox_inches='tight')
@@ -597,7 +616,7 @@ def experiment_basin_mapping(
 
 def experiment_adaptive_landscape(
         N: int = 20, T_total: float = 80.0,
-        save_path: str = "figures/B4_adaptive_landscape.png"):
+        save_path: str = "fig9_adaptive-landscape.png"):
     """
     Demonstrate that as G_ij adapts, the effective energy landscape reshapes.
 
@@ -642,7 +661,7 @@ def experiment_adaptive_landscape(
     fig, axes = plt.subplots(3, n_snap, figsize=(4*n_snap, 11))
     fig.suptitle("Adaptive energy landscape and Hopfield connection\n"
                  r"$J_{ij} = G_{ij}(t)$ reshapes as tissue evolves",
-                 fontsize=12, fontweight='bold')
+                 fontsize=20, fontweight='bold')
 
     V_grid = np.linspace(-2.2, 2.2, 200)
 
@@ -658,24 +677,24 @@ def experiment_adaptive_landscape(
         axes[0, col].axhline(p.V_plus,  color='firebrick', lw=1, ls='--', alpha=0.7)
         axes[0, col].axhline(p.V_minus, color='steelblue', lw=1, ls='--', alpha=0.7)
         axes[0, col].set_ylim(-2.2, 2.2)
-        axes[0, col].set_title(f'$t={t:.0f}$\n$E={E:.2f}$', fontsize=9)
-        axes[0, col].set_xlabel('Cell', fontsize=8)
-        if col == 0: axes[0, col].set_ylabel(r'$V_i$', fontsize=10)
+        axes[0, col].set_title(f'$t={t:.0f}$\n$E={E:.2f}$', fontsize=15)
+        axes[0, col].set_xlabel('Cell', fontsize=14)
+        if col == 0: axes[0, col].set_ylabel(r'$V_i$', fontsize=17)
 
         # Row 1: G_ij heatmap
         im = axes[1, col].imshow(G, cmap='Blues', origin='upper',
                                   vmin=0, vmax=p.G_init*3)
         plt.colorbar(im, ax=axes[1, col], fraction=0.046, pad=0.04)
-        axes[1, col].set_title(fr'$G_{{ij}}$ (mean={Gm:.3f})', fontsize=9)
-        if col == 0: axes[1, col].set_ylabel(r'$G_{ij}$', fontsize=10)
+        axes[1, col].set_title(fr'$G_{{ij}}$ (mean={Gm:.3f})', fontsize=15)
+        if col == 0: axes[1, col].set_ylabel(r'$G_{ij}$', fontsize=17)
 
         # Row 2: Local energy contribution U(V_i)
         U_local = U_potential(V, p.a_bist, p.V_minus, p.V_0, p.V_plus)
         U_local -= U_local.min()
         axes[2, col].bar(np.arange(N), U_local, color='mediumpurple', alpha=0.8)
-        axes[2, col].set_title(r'$U(V_i)$ local energy', fontsize=9)
-        axes[2, col].set_xlabel('Cell', fontsize=8)
-        if col == 0: axes[2, col].set_ylabel(r'$U(V_i)$', fontsize=10)
+        axes[2, col].set_title(r'$U(V_i)$ local energy', fontsize=15)
+        axes[2, col].set_xlabel('Cell', fontsize=14)
+        if col == 0: axes[2, col].set_ylabel(r'$U(V_i)$', fontsize=17)
 
     plt.tight_layout()
     plt.savefig(save_path, dpi=150, bbox_inches='tight')
@@ -696,7 +715,7 @@ def experiment_switching_phase_diagram(
         T_force_vals: Optional[np.ndarray] = None,
         n_seeds: int = 3,
         tau_eps: float = 50.0,
-        save_path: str = "figures/B5_switching_phase.png"):
+        save_path: str = "fig4_switching-phase.png"):
     """
     Phase diagram of polarity-switching success as a function of
     forcing amplitude A and forcing duration T_force.
@@ -784,22 +803,24 @@ def experiment_switching_phase_diagram(
         r"Attractor switching phase diagram: amplitude $A$ vs duration $T_{\rm force}$"
         "\n"
         r"Polarity reversal probability over " + str(n_seeds) + " seeds",
-        fontsize=11, fontweight='bold')
+        fontsize=19, fontweight='bold')
 
     # Panel 0: switching probability heatmap
     im0 = axes[0].pcolormesh(T_force_vals, A_vals, switch_prob,
                               cmap='RdYlGn', vmin=0, vmax=1, shading='auto')
     plt.colorbar(im0, ax=axes[0], label='P(switch)')
-    axes[0].set_xlabel(r'Forcing duration $T_{\rm force}$', fontsize=10)
-    axes[0].set_ylabel(r'Forcing amplitude $A$', fontsize=10)
-    axes[0].set_title('Switching probability', fontsize=10)
+    axes[0].set_xlabel(r'Forcing duration $T_{\rm force}$', fontsize=17)
+    axes[0].set_ylabel(r'Forcing amplitude $A$', fontsize=17)
+    axes[0].set_title('Switching probability', fontsize=17)
     # Contour at p = 0.5  (phase boundary)
     try:
         axes[0].contour(T_force_vals, A_vals, switch_prob,
                         levels=[0.5], colors='k', linewidths=2,
                         linestyles='--')
         axes[0].text(T_force_vals[1], A_vals[-2], '$p=0.5$ boundary',
-                     fontsize=8, color='k')
+                     fontsize=13, color='k',
+                     bbox=dict(boxstyle='round,pad=0.25', facecolor='white',
+                               alpha=0.85, edgecolor='none'))
     except Exception:
         pass
 
@@ -807,9 +828,9 @@ def experiment_switching_phase_diagram(
     im1 = axes[1].pcolormesh(T_force_vals, A_vals, pol_change,
                               cmap='Blues', shading='auto')
     plt.colorbar(im1, ax=axes[1], label=r'$|\Delta\,\mathrm{polarity}|$')
-    axes[1].set_xlabel(r'$T_{\rm force}$', fontsize=10)
-    axes[1].set_ylabel(r'$A$', fontsize=10)
-    axes[1].set_title(r'Mean $|\Delta\,\mathrm{polarity}|$', fontsize=10)
+    axes[1].set_xlabel(r'$T_{\rm force}$', fontsize=17)
+    axes[1].set_ylabel(r'$A$', fontsize=17)
+    axes[1].set_title(r'Mean $|\Delta\,\mathrm{polarity}|$', fontsize=17)
 
     # Panel 2: switching threshold curve  A*(T_force)
     # For each T_force find the smallest A that gives p >= 0.5
@@ -834,10 +855,10 @@ def experiment_switching_phase_diagram(
         axes[2].fill_between(T_force_vals[mask], A_vals[0], A_star[mask],
                              alpha=0.15, color='red',
                              label='No-switch region')
-    axes[2].set_xlabel(r'$T_{\rm force}$', fontsize=10)
-    axes[2].set_ylabel(r'$A^*$ (threshold amplitude)', fontsize=10)
-    axes[2].set_title(r'Phase boundary $A^*(T_{\rm force})$', fontsize=10)
-    axes[2].legend(fontsize=8); axes[2].grid(True, alpha=0.3)
+    axes[2].set_xlabel(r'$T_{\rm force}$', fontsize=17)
+    axes[2].set_ylabel(r'$A^*$ (threshold amplitude)', fontsize=17)
+    axes[2].set_title(r'Phase boundary $A^*(T_{\rm force})$', fontsize=17)
+    axes[2].legend(fontsize=14); axes[2].grid(True, alpha=0.3)
     axes[2].set_xlim(T_force_vals[0], T_force_vals[-1])
     axes[2].set_ylim(A_vals[0], A_vals[-1])
 
@@ -892,7 +913,7 @@ if __name__ == "__main__":
 
     print("\n" + "="*65)
     print("  Attractor analysis complete. Figures:")
-    for f in sorted(os.listdir("figures")):
-        if f.startswith("B"):
+    for f in sorted(os.listdir(".")):
+        if f.startswith("fig") and f.endswith(".png"):
             print(f"  {f}")
     print("="*65)
